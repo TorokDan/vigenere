@@ -37,11 +37,20 @@ def newKey(key, toCode):
             newKeyString += key[y]
     return newKeyString
 
+def encode(toCode, mainRow, rows):
+    output = ''
+    for charNumTo in range(len(toCode)):
+        for numMain in range(len(mainRow)):
+            if mainRow[numMain] == toCode[charNumTo]:
+                output += rows[charNumTo][numMain]
+    return output
+
 def main():
     mainRow = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'
     key = getpass('Please give me the password for the encode: ')
     key = checkKey(key)
-    toCode = input('Please give me the sentence, you want to encode: ')
+
+    toCode = input('Please give me the sentence, you want to encode: ').upper()
 
     key = newKey(key, toCode)
 
@@ -50,9 +59,8 @@ def main():
     for char in key:
         rows.append(ceasar(char, mainRow))
     
-    # here will come the encode 
-    for charNum in range(len(toCode)):
-        print(f'the character: {toCode[charNum]}\nThe encoded character: {rows[charNum]}')
+    # output
+    print(encode(toCode, mainRow, rows))
 
 
 if '__main__' == __name__:
