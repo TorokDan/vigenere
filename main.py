@@ -1,6 +1,13 @@
 #!venv/bin/python3
 from getpass import getpass
 from typing import final
+import argparse
+
+# for the arguments
+def parsing():
+    parser = argparse.ArgumentParser(description='just for fun... hehe')
+    parser.add_argument('-d', '--decode', action='store_true')
+    return parser.parse_args()
 
 
 # create a ceasar row
@@ -37,30 +44,55 @@ def newKey(key, toCode):
             newKeyString += key[y]
     return newKeyString
 
-def encode(toCode, mainRow, rows):
+def encode(code, mainRow, rows):
     output = ''
-    for charNumTo in range(len(toCode)):
+    for charNumTo in range(len(code)):
         for numMain in range(len(mainRow)):
-            if mainRow[numMain] == toCode[charNumTo]:
+            if mainRow[numMain] == code[charNumTo]:
                 output += rows[charNumTo][numMain]
     return output
 
+def decode(code, mainRow, rows, key):
+    output = ''
+    for numKey in range(len(key)):
+        for charNumRow in range(len(rows[numKey])):
+            if rows[numKey][charNumRow] == code[numKey]:
+                output += mainRow[charNumRow]
+    return output
+
 def main():
+    args = parsing()
     mainRow = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'
+
+    # get the 'password'
     key = getpass('Please give me the password for the encode: ')
     key = checkKey(key)
-
-    toCode = input('Please give me the sentence, you want to encode: ').upper()
-
-    key = newKey(key, toCode)
-
-    # array for the ceasar rows
     rows = []
-    for char in key:
-        rows.append(ceasar(char, mainRow))
-    
-    # output
-    print(encode(toCode, mainRow, rows))
+
+    # encode
+    if args.decode == False:
+        toCode = input('Please give me the sentence, you want to encode: ').upper()
+
+        key = newKey(key, toCode)
+
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
+        
+        # output
+        print(encode(toCode, mainRow, rows))
+    if args.decode == True:
+        fromCode = input('Please give me the sentence, you want to decode: ').upper()
+
+        key = newKey(key, fromCode)
+
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
+
+        print(decode(fromCode, mainRow, rows, key))
+
+        
 
 
 if '__main__' == __name__:
