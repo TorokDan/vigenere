@@ -9,21 +9,10 @@ def parsing():
     parser.add_argument('-d', '--decode', action='store_true')
     return parser.parse_args()
 
-
-# create a ceasar row
+# generate a ceasar row
 def ceasar(letter, row):
-    endRow = ''
-    finalRow = ''
-    number = 0
-    for char in row:
-        if char == letter:
-            number = 1
-        if number == 1:
-            finalRow += char
-        if number == 0:
-            endRow += char
-    return f'{finalRow}{endRow}'
-    print(letter)
+    position = row.find(letter)
+    return row[position:] + row[:position]
 
 
 # check if the key is only contains alphabetical characters
