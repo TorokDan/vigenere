@@ -51,7 +51,7 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
-    mainRow = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz .!?'
 
     # get the 'password'
     key = getpass('Please give me the password for the encode: ')
@@ -60,7 +60,7 @@ def main():
 
     # encode
     if args.decode == False:
-        toCode = input('Please give me the sentence, you want to encode: ').upper()
+        toCode = input('Please give me the sentence, you want to encode: ')
 
         key = newKey(key, toCode)
 
@@ -71,7 +71,7 @@ def main():
         # output
         print(encode(toCode, mainRow, rows))
     if args.decode == True:
-        fromCode = input('Please give me the sentence, you want to decode: ').upper()
+        fromCode = input('Please give me the sentence, you want to decode: ')
 
         key = newKey(key, fromCode)
 
