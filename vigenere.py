@@ -1,12 +1,12 @@
 #!venv/bin/python3
 from getpass import getpass
-# from typing import final
 import argparse
 
 # for the arguments
 def parsing():
     parser = argparse.ArgumentParser(description='just for fun... hehe')
     parser.add_argument('-d', '--decode', action='store_true')
+    parser.add_argument('-f', '--file', action='store_true')
     return parser.parse_args()
 
 # generate a ceasar row
@@ -25,7 +25,6 @@ def checkKey(key):
 # Create the long key string, which is as long as the sentence
 def newKey(key, toCode):
     newKeyString = ''
-    
     for x in range((int(len(toCode)//int(len(key))))):
         newKeyString += key
     if len(toCode) % len(key) != 0:
@@ -51,25 +50,13 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz .!?'
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz .,!?'
 
     # get the 'password'
-    key = getpass('Please give me the password for the encode: ')
+    key = getpass('Please give me the password: ')
     key = checkKey(key)
     rows = []
-
-    # encode
-    if args.decode == False:
-        toCode = input('Please give me the sentence, you want to encode: ')
-
-        key = newKey(key, toCode)
-
-        # array for the ceasar rows
-        for char in key:
-            rows.append(ceasar(char, mainRow))
-        
-        # output
-        print(encode(toCode, mainRow, rows))
+    # decode
     if args.decode == True:
         fromCode = input('Please give me the sentence, you want to decode: ')
 
@@ -80,8 +67,29 @@ def main():
             rows.append(ceasar(char, mainRow))
 
         print(decode(fromCode, mainRow, rows, key))
+    # from file
+    elif args.file == True:
+        fromCode = open(input('Please give me the file, you want to encrypt from: '), 'r').read()
+        key = newKey(key, fromCode)
+        # print(fromCode)
+        # print(key)
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
+        # print(rows)
+        print(encode(fromCode, mainRow, rows))
+    # encode
+    else:
+        toCode = input('Please give me the sentence, you want to encode: ')
 
+        key = newKey(key, toCode)
+
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
         
+        # output
+        print(encode(toCode, mainRow, rows))
 
 
 if '__main__' == __name__:

@@ -1,9 +1,14 @@
 #!venv/bin/python3
 
-testString = 'almakorte'
+from typing import Match
 
-testChar = testString.find('k')
 
-# teststring = testString[4:] + testString[:4]
+a = "asd"
+b = "asde"
 
-print(testString[testChar:] + testString[:testChar])
+if a == True:
+    print("true")
+elif b == "asd":
+    print("asd")
+else:
+    print("false")
