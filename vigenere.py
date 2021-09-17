@@ -57,7 +57,7 @@ def main():
     key = checkKey(key)
     rows = []
     # decode
-    if args.decode == True:
+    if args.decode == True and args.file == False:
         fromCode = input('Please give me the sentence, you want to decode: ')
 
         key = newKey(key, fromCode)
@@ -67,17 +67,35 @@ def main():
             rows.append(ceasar(char, mainRow))
 
         print(decode(fromCode, mainRow, rows, key))
-    # from file
-    elif args.file == True:
-        fromCode = open(input('Please give me the file, you want to encrypt from: '), 'r').read()
+    # encode from file
+    elif args.file == True and args.decode == False:
+        file = input('Please give me the file, you want to encrypt from: ')
+        fromCode = open(file, 'r').read()
         key = newKey(key, fromCode)
-        # print(fromCode)
-        # print(key)
+
         # array for the ceasar rows
         for char in key:
             rows.append(ceasar(char, mainRow))
-        # print(rows)
-        print(encode(fromCode, mainRow, rows))
+        
+        toCode = open(f'{file}.vig', 'w')
+        toCode.write(encode(fromCode, mainRow, rows))
+        toCode.close()
+    # decode from file
+    elif args.file == True and args.decode == True:
+        file = input('Please give me the file, you want to decode from: ')
+        if file.endswith('.vig') == False:
+            print('This is not a vig file. Give a file, with a .vig ending.')
+        else:
+            fromCode = open(file, 'r').read()
+            key = newKey(key, fromCode)
+
+            # array for the ceasar rows
+            for char in key:
+                rows.append(ceasar(char, mainRow))
+            
+            toCode = open(f'{file[:-4]}', 'w')
+            toCode.write(decode(fromCode, mainRow, rows, key))
+            toCode.close()
     # encode
     else:
         toCode = input('Please give me the sentence, you want to encode: ')
