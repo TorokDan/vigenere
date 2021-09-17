@@ -50,7 +50,7 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz .,!?'
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@'
 
     # get the 'password'
     key = getpass('Please give me the password: ')
@@ -112,3 +112,4 @@ def main():
 
 if '__main__' == __name__:
     main()
+    input()
