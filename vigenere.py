@@ -1,4 +1,3 @@
-#!venv/bin/python3
 from getpass import getpass
 import argparse
 
@@ -112,4 +111,3 @@ def main():
 
 if '__main__' == __name__:
     main()
-    input()

@@ -1,1 +1,0 @@
-Hello, ez egy teszt szöveg, amit fileba írtam.
