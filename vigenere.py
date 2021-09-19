@@ -6,6 +6,7 @@ def parsing():
     parser = argparse.ArgumentParser(description='just for fun... hehe')
     parser.add_argument('-d', '--decode', action='store_true')
     parser.add_argument('-f', '--file', action='store_true')
+    parser.add_argument('-p', '--password', nargs='?')
     return parser.parse_args()
 
 # generate a ceasar row
@@ -52,8 +53,11 @@ def main():
     mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@'
 
     # get the 'password'
-    key = getpass('Please give me the password: ')
-    key = checkKey(key)
+    if args.password == None:
+        key = getpass('Please give me the password: ')
+        key = checkKey(key)
+    else:
+        key = args.password
     rows = []
     # decode
     if args.decode == True and args.file == False:
