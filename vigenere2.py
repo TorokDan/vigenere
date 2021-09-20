@@ -5,8 +5,8 @@ import argparse
 def parsing():
     parser = argparse.ArgumentParser(description='just for fun... hehe')
     parser.add_argument('-d', '--decode', action='store_true')
-    parser.add_argument('-f', '--file', action='store_true')
-    parser.add_argument('-p', '--password', nargs='?')
+    parser.add_argument('-f', '--file', nargs=1)
+    parser.add_argument('-p', '--password', nargs=1)
     return parser.parse_args()
 
 # generate a ceasar row
@@ -49,6 +49,7 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
+    print(args)
     mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@'
 
     # get the 'password'
@@ -56,10 +57,10 @@ def main():
         key = getpass('Please give me the password: ')
         key = checkKey(key)
     else:
-        key = args.password
+        key = args.password[0]
     rows = []
     # decode
-    if args.decode == True and args.file == False:
+    if args.decode == True and args.file == None:
         fromCode = input('Please give me the sentence, you want to decode: ')
 
         key = newKey(key, fromCode)
@@ -70,8 +71,8 @@ def main():
 
         print(decode(fromCode, mainRow, rows, key))
     # encode from file
-    elif args.file == True and args.decode == False:
-        file = input('Please give me the file, you want to encrypt from: ')
+    elif args.file != None and args.decode == False:
+        file = args.file[0]
         fromCode = open(file, 'r').read()
         key = newKey(key, fromCode)
 
@@ -83,8 +84,8 @@ def main():
         toCode.write(encode(fromCode, mainRow, rows))
         toCode.close()
     # decode from file
-    elif args.file == True and args.decode == True:
-        file = input('Please give me the file, you want to decode from: ')
+    elif args.file != None and args.decode == True:
+        file = args.file[0]
         if file.endswith('.vig') == False:
             print('This is not a vig file. Give a file, with a .vig ending.')
         else:

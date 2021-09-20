@@ -5,7 +5,7 @@ import argparse
 def parsing():
     parser = argparse.ArgumentParser(description='just for fun... hehe')
     # parser.add_argument('-t', '--teszt', action='store_true')
-    parser.add_argument('-a', '--tesztA', nargs='?')
+    parser.add_argument('-a', '--tesztA', nargs='?', default='')
     parser.add_argument('-b', '--tesztB', nargs='?')
     return parser.parse_args()
 
