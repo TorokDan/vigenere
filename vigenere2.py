@@ -8,6 +8,7 @@ def parsing():
     parser.add_argument('-f', '--file', nargs=1)
     parser.add_argument('-p', '--password', nargs=1)
     parser.add_argument('-s', '--secret_file', nargs=1)
+    parser.add_argument('-o', '--output', nargs=1)
     return parser.parse_args()
 
 # generate a ceasar row
@@ -83,7 +84,10 @@ def main():
         for char in key:
             rows.append(ceasar(char, mainRow))
         
-        toCode = open(f'{file}.vig', 'w')
+        if args.output == None:
+            toCode = open(f'{file}.vig', 'w')
+        if args.output != None:
+            toCode = open(args.output[0], 'w')
         toCode.write(encode(fromCode, mainRow, rows))
         toCode.close()
     # decode from file
@@ -99,7 +103,10 @@ def main():
             for char in key:
                 rows.append(ceasar(char, mainRow))
             
-            toCode = open(f'{file[:-4]}', 'w')
+            if args.output == None:
+                toCode = open(f'{file[:-4]}', 'w')
+            if args.output != None:
+                toCode = open(args.output, 'w')
             toCode.write(decode(fromCode, mainRow, rows, key))
             toCode.close()
     # encode
