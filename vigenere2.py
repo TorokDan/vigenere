@@ -35,24 +35,39 @@ def newKey(key, toCode):
 
 def encode(code, mainRow, rows):
     output = ''
+    print(code)
     for charNumTo in range(len(code)):
+        print(rows[charNumTo])
         for numMain in range(len(mainRow)):
             if mainRow[numMain] == code[charNumTo]:
                 output += rows[charNumTo][numMain]
+    print(output)
     return output
+
+# def encode(code, mainRow, rows):
+#     output = ''
+#     for charNumTo in range(len(newCode)):
+#         for numMain in range(len(mainRow)):
+#             if mainRow[numMain] == newCode[charNumTo]:
+#                 output += rows[charNumTo][numMain]
+#     return output
 
 def decode(code, mainRow, rows, key):
     output = ''
+    print(code)
+    print(mainRow)
     for numKey in range(len(key)):
+        print(rows[numKey])
         for charNumRow in range(len(rows[numKey])):
             if rows[numKey][charNumRow] == code[numKey]:
                 output += mainRow[charNumRow]
-    return output
+    print(output)
+    return eval(output)
 
 def main():
     args = parsing()
     print(args)
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-'
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-\/\''
 
     # get the 'password'
     if args.password == None and args.secret_file == None:
@@ -62,6 +77,9 @@ def main():
         key = args.password[0]
     elif args.password == None and args.secret_file != None:
         key = open(args.secret_file[0], 'r').read()
+    elif args.password != None and args.secret_file != None:
+        print("nem lehet egyszerre jelszót, és jelszó file-t használni!")
+        exit()
     rows = []
     # decode
     if args.decode == True and args.file == None:
@@ -77,13 +95,16 @@ def main():
     # encode from file
     elif args.file != None and args.decode == False:
         file = args.file[0]
-        fromCode = open(file, 'r').read()
-        key = newKey(key, fromCode)
+        fromCode = repr(open(file, 'r').read())
 
+        key = newKey(key, fromCode)
+        fileName = ''
         # array for the ceasar rows
         for char in key:
             rows.append(ceasar(char, mainRow))
         
+
+
         if args.output == None:
             toCode = open(f'{file}.vig', 'w')
         if args.output != None:

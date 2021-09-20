@@ -1,3 +1,3 @@
-string = 'output.vig'
+string = repr('output.\nvig')
 
-print(string[-4:])
+print(eval(string))

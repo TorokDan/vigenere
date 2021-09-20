@@ -5,8 +5,10 @@ import argparse
 def parsing():
     parser = argparse.ArgumentParser(description='just for fun... hehe')
     parser.add_argument('-d', '--decode', action='store_true')
-    parser.add_argument('-f', '--file', action='store_true')
-    parser.add_argument('-p', '--password', nargs='?')
+    parser.add_argument('-f', '--file', nargs=1)
+    parser.add_argument('-p', '--password', nargs=1)
+    parser.add_argument('-s', '--secret_file', nargs=1)
+    parser.add_argument('-o', '--output', nargs=1)
     return parser.parse_args()
 
 # generate a ceasar row
@@ -49,17 +51,20 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@'
+    print(args)
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-'
 
     # get the 'password'
-    if args.password == None:
+    if args.password == None and args.secret_file == None:
         key = getpass('Please give me the password: ')
         key = checkKey(key)
-    else:
-        key = args.password
+    elif args.password != None and args.secret_file == None:
+        key = args.password[0]
+    elif args.password == None and args.secret_file != None:
+        key = open(args.secret_file[0], 'r').read()
     rows = []
     # decode
-    if args.decode == True and args.file == False:
+    if args.decode == True and args.file == None:
         fromCode = input('Please give me the sentence, you want to decode: ')
 
         key = newKey(key, fromCode)
@@ -70,8 +75,8 @@ def main():
 
         print(decode(fromCode, mainRow, rows, key))
     # encode from file
-    elif args.file == True and args.decode == False:
-        file = input('Please give me the file, you want to encrypt from: ')
+    elif args.file != None and args.decode == False:
+        file = args.file[0]
         fromCode = open(file, 'r').read()
         key = newKey(key, fromCode)
 
@@ -79,25 +84,37 @@ def main():
         for char in key:
             rows.append(ceasar(char, mainRow))
         
-        toCode = open(f'{file}.vig', 'w')
+        if args.output == None:
+            toCode = open(f'{file}.vig', 'w')
+        if args.output != None:
+            if args.output[0][-4:] == '.vig':
+                toCode = open(args.output[0], 'w')
+            if args.file[0][-4:] != '.vig':
+                toCode = open(f'{args.output[0]}.vig', 'w')
         toCode.write(encode(fromCode, mainRow, rows))
         toCode.close()
     # decode from file
-    elif args.file == True and args.decode == True:
-        file = input('Please give me the file, you want to decode from: ')
-        if file.endswith('.vig') == False:
-            print('This is not a vig file. Give a file, with a .vig ending.')
-        else:
-            fromCode = open(file, 'r').read()
-            key = newKey(key, fromCode)
+    elif args.file != None and args.decode == True:
+        file = args.file[0]
+        fromCode = open(file, 'r').read()
+        key = newKey(key, fromCode)
 
-            # array for the ceasar rows
-            for char in key:
-                rows.append(ceasar(char, mainRow))
-            
-            toCode = open(f'{file[:-4]}', 'w')
-            toCode.write(decode(fromCode, mainRow, rows, key))
-            toCode.close()
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
+        
+        if args.output == None:
+            if args.file[0][-4:] == '.vig':
+                toCode = open(file[:-4], 'w')
+            if args.file[0][-4:] != '.vig':
+                toCode = open(f'{args.file[0]}.org', 'w')
+        if args.output != None:
+            if args.output[0][-4:] == '.vig':
+                toCode = open(args.output[0][:-4], 'w')
+            if args.output[0][-4:] != '.vig':
+                toCode = open(args.output[0], 'w')
+        toCode.write(decode(fromCode, mainRow, rows, key))
+        toCode.close()
     # encode
     else:
         toCode = input('Please give me the sentence, you want to encode: ')
