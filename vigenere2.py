@@ -7,6 +7,7 @@ def parsing():
     parser.add_argument('-d', '--decode', action='store_true')
     parser.add_argument('-f', '--file', nargs=1)
     parser.add_argument('-p', '--password', nargs=1)
+    parser.add_argument('-s', '--secret_file', nargs=1)
     return parser.parse_args()
 
 # generate a ceasar row
@@ -50,14 +51,16 @@ def decode(code, mainRow, rows, key):
 def main():
     args = parsing()
     print(args)
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@'
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-'
 
     # get the 'password'
-    if args.password == None:
+    if args.password == None and args.secret_file == None:
         key = getpass('Please give me the password: ')
         key = checkKey(key)
-    else:
+    elif args.password != None and args.secret_file == None:
         key = args.password[0]
+    elif args.password == None and args.secret_file != None:
+        key = open(args.secret_file[0], 'r').read()
     rows = []
     # decode
     if args.decode == True and args.file == None:
