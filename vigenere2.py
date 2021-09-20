@@ -87,28 +87,34 @@ def main():
         if args.output == None:
             toCode = open(f'{file}.vig', 'w')
         if args.output != None:
-            toCode = open(args.output[0], 'w')
+            if args.output[0][-4:] == '.vig':
+                toCode = open(args.output[0], 'w')
+            if args.file[0][-4:] != '.vig':
+                toCode = open(f'{args.output[0]}.vig', 'w')
         toCode.write(encode(fromCode, mainRow, rows))
         toCode.close()
     # decode from file
     elif args.file != None and args.decode == True:
         file = args.file[0]
-        if file.endswith('.vig') == False:
-            print('This is not a vig file. Give a file, with a .vig ending.')
-        else:
-            fromCode = open(file, 'r').read()
-            key = newKey(key, fromCode)
+        fromCode = open(file, 'r').read()
+        key = newKey(key, fromCode)
 
-            # array for the ceasar rows
-            for char in key:
-                rows.append(ceasar(char, mainRow))
-            
-            if args.output == None:
-                toCode = open(f'{file[:-4]}', 'w')
-            if args.output != None:
-                toCode = open(args.output, 'w')
-            toCode.write(decode(fromCode, mainRow, rows, key))
-            toCode.close()
+        # array for the ceasar rows
+        for char in key:
+            rows.append(ceasar(char, mainRow))
+        
+        if args.output == None:
+            if args.file[0][-4:] == '.vig':
+                toCode = open(file[:-4], 'w')
+            if args.file[0][-4:] != '.vig':
+                toCode = open(f'{args.file[0]}.org', 'w')
+        if args.output != None:
+            if args.output[0][-4:] == '.vig':
+                toCode = open(args.output[0][:-4], 'w')
+            if args.output[0][-4:] != '.vig':
+                toCode = open(args.output[0], 'w')
+        toCode.write(decode(fromCode, mainRow, rows, key))
+        toCode.close()
     # encode
     else:
         toCode = input('Please give me the sentence, you want to encode: ')
