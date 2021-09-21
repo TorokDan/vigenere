@@ -3,7 +3,7 @@ import argparse
 
 # for the arguments
 def parsing():
-    parser = argparse.ArgumentParser(description='just for fun... hehe')
+    parser = argparse.ArgumentParser(description='just for fun')
     parser.add_argument('-d', '--decode', action='store_true')
     parser.add_argument('-f', '--file', nargs=1)
     parser.add_argument('-p', '--password', nargs=1)
@@ -11,19 +11,19 @@ def parsing():
     parser.add_argument('-o', '--output', nargs=1)
     return parser.parse_args()
 
-# generate a ceasar row
+# ceasar sor létrehozása
 def ceasar(letter, row):
     position = row.find(letter)
     return row[position:] + row[:position]
 
-# check if the key is only contains alphabetical characters
+# ellenőrzi, hogy a jelszó csak az abc betűit használja-e
 def checkKey(key):
     if not key.isalpha():
-        print('The password can only contains alphabetical characters')
+        print('A jelszó csak az abc betűit tartalmazhatja!')
         exit()
     return key.upper()
 
-# Create the long key string, which is as long as the sentence
+# A megadott jelszóból létrehoz egy ugyan olyan hosszúságú kulcsot, mint a megadott szöveg
 def newKey(key, toCode):
     newKeyString = ''
     for x in range((int(len(toCode)//int(len(key))))):
@@ -35,43 +35,27 @@ def newKey(key, toCode):
 
 def encode(code, mainRow, rows):
     output = ''
-    print(code)
     for charNumTo in range(len(code)):
-        print(rows[charNumTo])
         for numMain in range(len(mainRow)):
             if mainRow[numMain] == code[charNumTo]:
                 output += rows[charNumTo][numMain]
-    print(output)
     return output
-
-# def encode(code, mainRow, rows):
-#     output = ''
-#     for charNumTo in range(len(newCode)):
-#         for numMain in range(len(mainRow)):
-#             if mainRow[numMain] == newCode[charNumTo]:
-#                 output += rows[charNumTo][numMain]
-#     return output
 
 def decode(code, mainRow, rows, key):
     output = ''
-    print(code)
-    print(mainRow)
     for numKey in range(len(key)):
-        print(rows[numKey])
         for charNumRow in range(len(rows[numKey])):
             if rows[numKey][charNumRow] == code[numKey]:
                 output += mainRow[charNumRow]
-    print(output)
-    return eval(output)
+    return output
 
 def main():
     args = parsing()
-    print(args)
     mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-\/\''
 
-    # get the 'password'
+    # jelszó bekérése, megadott argumentumok lekezelése
     if args.password == None and args.secret_file == None:
-        key = getpass('Please give me the password: ')
+        key = getpass('Kérlek add meg a jelszót: ')
         key = checkKey(key)
     elif args.password != None and args.secret_file == None:
         key = args.password[0]
@@ -83,28 +67,24 @@ def main():
     rows = []
     # decode
     if args.decode == True and args.file == None:
-        fromCode = input('Please give me the sentence, you want to decode: ')
+        fromCode = input('Kérlek add meg a mondatot, amit dekódolni szeretnél: ')
 
         key = newKey(key, fromCode)
 
-        # array for the ceasar rows
+        # létrehoz egy arrayt a ceasar soroknak
         for char in key:
             rows.append(ceasar(char, mainRow))
 
-        print(decode(fromCode, mainRow, rows, key))
-    # encode from file
+        print(eval(decode(fromCode, mainRow, rows, key)))
+    # titkosítás fileból
     elif args.file != None and args.decode == False:
         file = args.file[0]
         fromCode = repr(open(file, 'r').read())
 
         key = newKey(key, fromCode)
-        fileName = ''
-        # array for the ceasar rows
+        # létrehoz egy arrayt a ceasar soroknak
         for char in key:
             rows.append(ceasar(char, mainRow))
-        
-
-
         if args.output == None:
             toCode = open(f'{file}.vig', 'w')
         if args.output != None:
@@ -114,16 +94,15 @@ def main():
                 toCode = open(f'{args.output[0]}.vig', 'w')
         toCode.write(encode(fromCode, mainRow, rows))
         toCode.close()
-    # decode from file
+    # dekódolás fileból
     elif args.file != None and args.decode == True:
         file = args.file[0]
         fromCode = open(file, 'r').read()
         key = newKey(key, fromCode)
 
-        # array for the ceasar rows
+        # létrehoz egy arrayt a ceasar soroknak
         for char in key:
             rows.append(ceasar(char, mainRow))
-        
         if args.output == None:
             if args.file[0][-4:] == '.vig':
                 toCode = open(file[:-4], 'w')
@@ -134,15 +113,15 @@ def main():
                 toCode = open(args.output[0][:-4], 'w')
             if args.output[0][-4:] != '.vig':
                 toCode = open(args.output[0], 'w')
-        toCode.write(decode(fromCode, mainRow, rows, key))
+        toCode.write(eval(decode(fromCode, mainRow, rows, key)))
         toCode.close()
     # encode
     else:
-        toCode = input('Please give me the sentence, you want to encode: ')
+        toCode = repr(input('Kérlek add meg a mondatot, amit le szeretnél titkosítani: '))
 
         key = newKey(key, toCode)
 
-        # array for the ceasar rows
+        # létrehoz egy arrayt a ceasar soroknak
         for char in key:
             rows.append(ceasar(char, mainRow))
         
