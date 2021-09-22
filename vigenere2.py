@@ -51,7 +51,7 @@ def decode(code, mainRow, rows, key):
 
 def main():
     args = parsing()
-    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-\/\''
+    mainRow = 'AaÁáBbCcDdEeÉéFfGgHhIiÍíJjKkLlMmNnOoÓóÖöŐőPpQqRrSsTtUuÚúÜüŰűVvWwXxYyZz0123456789 .,!?#$@-\/\'[]*&<>%_§()|~\"'
 
     # jelszó bekérése, megadott argumentumok lekezelése
     if args.password == None and args.secret_file == None:
